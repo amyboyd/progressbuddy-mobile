@@ -5,6 +5,7 @@ import Appointments from '../Appointments';
 import CheckIn from '../CheckIn';
 import Home from '../Home';
 import Login from '../Login';
+import Progress from '../Progress';
 
 class Empty extends React.Component {
     static navigationOptions = () => ({
@@ -34,6 +35,9 @@ const routeConfig = {
     },
     Login: {
         screen: Login,
+    },
+    Progress: {
+        screen: Progress,
     },
 };
 

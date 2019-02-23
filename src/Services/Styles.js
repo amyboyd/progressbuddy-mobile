@@ -247,6 +247,22 @@ export const AppointmentStyles = StyleSheet.create({
     },
 });
 
+export const ProgressStyles = StyleSheet.create({
+    ...standardModal,
+
+    typeContainer: {
+        marginBottom: 10,
+    },
+    label: {
+        fontSize: 16,
+        marginBottom: 2,
+    },
+    image: {
+        width: '100%',
+        height: 21,
+    },
+});
+
 export const HeaderStyles = StyleSheet.create({
     container: {
         backgroundColor: primaryColorHex,
