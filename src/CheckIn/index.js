@@ -6,7 +6,7 @@ import LoadingSpinner from '../Services/LoadingSpinner';
 import NavigationHeader from '../UI/NavigationHeader';
 import {getSelf} from '../Services/Auth';
 import ApiService from '../Services/ApiService';
-import {button, buttonText, box, boxTitle, paragraphCenter, screenContainer} from '../Services/Styles';
+import {button, buttonText, box, paragraphCenter, screenContainer} from '../Services/Styles';
 
 export default class CheckIn extends Component {
     static navigationOptions = ({navigation}) => ({

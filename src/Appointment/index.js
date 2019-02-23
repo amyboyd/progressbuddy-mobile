@@ -4,7 +4,16 @@ import PropTypes from 'prop-types';
 import LoadingSpinner from '../Services/LoadingSpinner';
 import NavigationHeader from '../UI/NavigationHeader';
 import ApiService from '../Services/ApiService';
-import {AppointmentStyles as Styles, button, buttonText, secondaryButton, secondaryButtonText, textInput, screenContainer} from '../Services/Styles';
+import {
+    AppointmentStyles as Styles,
+    button,
+    buttonText,
+    secondaryButton,
+    secondaryButtonText,
+    paragraphCenter,
+    textInput,
+    screenContainer,
+} from '../Services/Styles';
 
 export default class Appointment extends Component {
     static navigationOptions = ({navigation}) => ({
@@ -42,17 +51,66 @@ export default class Appointment extends Component {
         LoadingSpinner.hide();
     }
 
+    confirmAttendance = async () => {
+        LoadingSpinner.show();
+
+        const appointmentId = this.props.navigation.state.params.appointmentId;
+
+        try {
+            await ApiService.post(`/appointments/confirmAttendance/${appointmentId}?appointmentStatus=CONFIRMED_TO_ATTEND`);
+            const updatedAppointment = Object.assign({}, this.state.appointment, {appointmentStatus: 'CONFIRMED_TO_ATTEND'});
+            this.setState({appointment: updatedAppointment});
+        } catch (error) {
+            Alert.alert('Problem Updating Appointment', 'An unexpected error occurred - please try again.', [{text: 'OK'}]);
+            console.error('Error updating appointment', error);
+            LoadingSpinner.hide();
+            return;
+        }
+
+        LoadingSpinner.hide();
+
+        Alert.alert('Thank you for confirming!', '', [{text: 'OK'}]);
+    }
+
     openNotAttendingModal = () => {
         this.setState({isNotAttendingModalOpen: true});
-        // @todo
     }
 
     closeNotAttendingModal = () => {
         this.setState({isNotAttendingModalOpen: false});
     }
 
-    confirmAttendance = () => {
-        // @todo
+    submitNotAttending = async () => {
+        const reason = this.state.notAttendingReason;
+
+        if (!reason) {
+            console.warn('Not submitting "not attending appointment" because no reason has been provided.');
+            return;
+        }
+
+        LoadingSpinner.show();
+
+        const appointmentId = this.props.navigation.state.params.appointmentId;
+        const url = `/appointments/confirmAttendance/${appointmentId}?appointmentStatus=CANCELLED&reasonForNotAttending=${encodeURIComponent(reason)}`;
+
+        try {
+            await ApiService.post(url);
+            const updatedAppointment = Object.assign({}, this.state.appointment, {appointmentStatus: 'CANCELLED'});
+            this.setState({appointment: updatedAppointment});
+        } catch (error) {
+            Alert.alert('Problem Updating Appointment', 'An unexpected error occurred - please try again.', [{text: 'OK'}]);
+            console.error('Error updating appointment', error);
+            LoadingSpinner.hide();
+            this.closeNotAttendingModal();
+            return;
+        }
+
+        LoadingSpinner.hide();
+        Alert.alert(
+            'Thank you for letting us know.',
+            '',
+            [{text: 'OK', onPress: this.closeNotAttendingModal}]
+        );
     }
 
     render() {
@@ -64,12 +122,22 @@ export default class Appointment extends Component {
         const appointment = this.state.appointment;
 
         let footerText;
-        if (appointment.status !== 'NOT_ATTENDING') {
+        switch (appointment.appointmentStatus) {
+        case 'NOT_SET':
             footerText = 'We will send you a reminder at 9am so you don\'t forget to attend.';
+            break;
+        case 'CONFIRMED_TO_ATTEND':
+            footerText = 'You have confirmed you are attending.\n\nWe will send you a reminder at 9am so you don\'t forget to attend.';
+            break;
+        case 'CANCELLED':
+            footerText = 'You have said that you are not attending.';
+            break;
+        default:
+            console.warn('Unexpected appointment status', appointment.appointmentStatus);
         }
 
         return (
-            <ScrollView style={screenContainer}>
+            <ScrollView style={screenContainer} keyboardShouldPersistTaps='handled'>
                 <View style={Styles.appointment}>
                     <View style={Styles.appointmentTopRow}>
                         <Text style={Styles.appointmentTitle}>
@@ -99,15 +167,17 @@ export default class Appointment extends Component {
                         <Image source={{uri: appointment.imageURL}} style={Styles.appointmentImage} />
                     </View>
 
-                    <View style={Styles.buttons}>
-                        <TouchableOpacity style={button} onPress={this.confirmAttendance}>
-                            <Text style={buttonText}>Confirm Attending</Text>
-                        </TouchableOpacity>
+                    {appointment.appointmentStatus === 'NOT_SET' &&
+                        <View style={Styles.buttons}>
+                            <TouchableOpacity style={button} onPress={this.confirmAttendance}>
+                                <Text style={buttonText}>Confirm Attending</Text>
+                            </TouchableOpacity>
 
-                        <TouchableOpacity style={secondaryButton} onPress={this.openNotAttendingModal}>
-                            <Text style={secondaryButtonText}>Not Attending</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity style={secondaryButton} onPress={this.openNotAttendingModal}>
+                                <Text style={secondaryButtonText}>Not Attending</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
 
                     {footerText &&
                         <Text style={Styles.footerText}>{footerText}</Text>
@@ -126,7 +196,7 @@ export default class Appointment extends Component {
 
                             <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={Styles.modalContent}>
                                 <View behavior='padding' style={{flex: 1}}>
-                                    <Text style={Styles.notAttendingReasonModalParagraph}>
+                                    <Text style={paragraphCenter}>
                                         {'Why are you not attending the appointment?'}
                                     </Text>
 

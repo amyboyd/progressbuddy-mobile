@@ -34,7 +34,7 @@ export default class Appointments extends Component {
             const self = await getSelf();
             const clientId = self.client.clientID;
             const appointments = (await ApiService.get(`/appointments/getAppointmentsForClient/${clientId}`))
-                .filter(appointment => appointment.status !== 'appointmentStatus');
+                .filter(appointment => appointment.appointmentStatus !== 'ATTENDED' && appointment.appointmentStatus !== 'NOT_ATTENDED');
             this.setState({appointments});
         } catch (error) {
             Alert.alert('Problem Loading Appointments', 'An unexpected error occurred - please try again.', [{text: 'OK'}]);
