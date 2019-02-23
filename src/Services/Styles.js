@@ -5,7 +5,7 @@ export const buttonBackgroundColorHex = '#F5A623';
 export const buttonTextColorHex = '#FFFFFF';
 export const standardBorderRadius = 4;
 
-export const BOTTOM_NAV_TAGS_HEIGHT = 56;
+export const BOTTOM_NAV_TAGS_HEIGHT = 63;
 
 export const BOTTOM_NAV_BACKGROUND_COLOR = '#dddddd';
 
