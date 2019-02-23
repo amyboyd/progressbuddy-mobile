@@ -1,0 +1,47 @@
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[node_modules]
+ignore = true
+
+[app.json]
+indent_size = 2
+
+[package.json]
+indent_size = 2
+
+[android/build]
+ignore = true
+
+[android/app]
+ignore = true
+
+[android/gradlew.bat]
+ignore = true
+
+[android/mobileapp.iml]
+ignore = true
+
+[ios/Pods]
+ignore = true
+
+[ios/build]
+ignore = true
+
+[ios/Podfile]
+indent_size = 2
+
+[ios/mobileapp]
+ignore = true
+
+[ios/mobileapp.xcodeproj]
+ignore = true
+
+[ios/*.m]
+indent_size = 2
+

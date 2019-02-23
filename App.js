@@ -1,50 +1,135 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
  * @format
  * @flow
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Keyboard, View, StatusBar} from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
+import RootStackNavigator from './src/Services/RootStackNavigator';
+import BottomNavTabs from './src/UI/BottomNavTabs';
+import LoadingSpinner from './src/Services/LoadingSpinner';
+import {isLoggedIn, getSelf} from './src/Services/Auth';
+import {navigateAndResetRootNavigator, getCurrentRouteName, setRootNavigator} from './src/Services/Navigation';
+import {primaryColorHex} from './src/Services/Styles';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+export default class App extends Component {
+    state = {
+        isKeyboardShowing: false,
+        primaryColorHex,
+    }
 
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
+    componentDidMount() {
+        this.initialize();
+    }
+
+    async initialize() {
+        const authToken = await isLoggedIn();
+        if (authToken !== null) {
+            await this.doLoggedInActions();
+        } else {
+            this.doLoggedOutActions();
+        }
+
+        // The keyboard 'will' events are only available on iOS. The 'did' events are available on iOS and Android.
+        // The 'will' events are used on iOS to cause the bottom nav tabs to hide/show immediately, instead of after a
+        // 1-second delay which messes with <KeyboardAvoidingView>.
+        Keyboard.addListener('keyboardWillShow', () => {
+            this.setState({isKeyboardShowing: true});
+        });
+        Keyboard.addListener('keyboardDidShow', () => {
+            this.setState({isKeyboardShowing: true});
+        });
+        Keyboard.addListener('keyboardWillHide', () => {
+            this.setState({isKeyboardShowing: false});
+        });
+        Keyboard.addListener('keyboardDidHide', () => {
+            this.setState({isKeyboardShowing: false});
+        });
+
+        SplashScreen.hide();
+
+        setTimeout(this.checkAppVersionSupport, 5000);
+    }
+
+    doLoggedOutActions() {
+        navigateAndResetRootNavigator('Login');
+    }
+
+    async doLoggedInActions() {
+        let initialRoute;
+        let initialRouteParams;
+
+        // @todo
+        // try {
+        //     initializeFCM();
+
+        //     const backgroundPushNotification = await getBackgroundPushNotification();
+
+        //     if (backgroundPushNotification) {
+        //         const targetRoute = getNotificationTargetRoute(backgroundPushNotification);
+        //         if (targetRoute) {
+        //             initialRoute = targetRoute[0];
+        //             initialRouteParams = targetRoute[1];
+        //         }
+        //     }
+        // } catch (error) {
+        //     Logger.error('Error deciding on first screen for logged in user', error);
+        // }
+
+        if (!initialRoute) {
+            initialRoute = 'Home';
+        }
+
+        navigateAndResetRootNavigator(initialRoute, initialRouteParams);
+        this.loadSelf();
+    }
+
+    async loadSelf() {
+        // Ensure the user's authentication is still valid.
+        // This also acts as a useful call-home to update the user's last API activity.
+        try {
+            const self = await getSelf();
+            console.info('Self:', self);
+        } catch (error) {
+            console.error('Error getting self on startup', error);
+        }
+    }
+
+    screensWithoutBottomNav = [
+        null,
+        'Login',
+    ]
+
+    shouldBottomNavBeDisplayed() {
+        if (this.state.isKeyboardShowing) {
+            return false;
+        }
+        return (this.screensWithoutBottomNav.indexOf(getCurrentRouteName()) === -1);
+    }
+
+    render() {
+        return (
+            <View style={{flex: 1}}>
+                <RootStackNavigator
+                    ref={(rootNavigator) => { setRootNavigator(rootNavigator); }}
+                    onNavigationStateChange={this.onNavigationStateChange}
+                />
+
+                {this.shouldBottomNavBeDisplayed() &&
+                    <View>
+                        <BottomNavTabs />
+                    </View>
+                }
+
+                <StatusBar
+                    barStyle='light-content'
+                    backgroundColor={this.state.primaryColorHex}
+                />
+
+                { LoadingSpinner.element }
+            </View>
+        );
+    }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
