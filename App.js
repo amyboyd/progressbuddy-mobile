@@ -5,14 +5,14 @@
  */
 
 import React, {Component} from 'react';
-import {Keyboard, View, StatusBar} from 'react-native';
+import {Keyboard, View, ScrollView, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import RootStackNavigator from './src/Services/RootStackNavigator';
 import BottomNavTabs from './src/UI/BottomNavTabs';
 import LoadingSpinner from './src/Services/LoadingSpinner';
 import {isLoggedIn, getSelf} from './src/Services/Auth';
 import {navigateAndResetRootNavigator, getCurrentRouteName, setRootNavigator} from './src/Services/Navigation';
-import {primaryColorHex} from './src/Services/Styles';
+import {primaryColorHex, BOTTOM_NAV_TAGS_HEIGHT} from './src/Services/Styles';
 
 export default class App extends Component {
     state = {
@@ -118,7 +118,7 @@ export default class App extends Component {
         return (
             <View style={{flex: 1}}>
                 <RootStackNavigator
-                    ref={(rootNavigator) => { setRootNavigator(rootNavigator); }}
+                    ref={rootNavigator => setRootNavigator(rootNavigator)}
                     onNavigationStateChange={this.onNavigationStateChange}
                 />
 
@@ -128,7 +128,9 @@ export default class App extends Component {
                 />
 
                 {this.shouldBottomNavBeDisplayed() &&
-                    <BottomNavTabs />
+                    <View style={{flex: 1, position: 'absolute', bottom: 0, left: 0, right: 0, height: BOTTOM_NAV_TAGS_HEIGHT}}>
+                        <BottomNavTabs />
+                    </View>
                 }
 
                 { LoadingSpinner.element }

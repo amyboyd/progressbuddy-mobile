@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
-import {Alert, View, Text, TouchableOpacity, ScrollView, Image} from 'react-native';
+import {Alert, View, Text, TouchableOpacity, ScrollView, Image, TextInput} from 'react-native';
 import IconsMaterial from 'react-native-vector-icons/MaterialIcons';
 import IconsMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconsOcticon from 'react-native-vector-icons/Octicons';
 import IconsFontAwesome from 'react-native-vector-icons/FontAwesome';
+import Moment from '../UI/Moment';
 import PropTypes from 'prop-types';
 import LoadingSpinner from '../Services/LoadingSpinner';
 import NavigationHeader from '../UI/NavigationHeader';
 import {getSelf} from '../Services/Auth';
-import {HomeStyles as Styles} from '../Services/Styles';
+import ApiService from '../Services/ApiService';
+import {HomeStyles as Styles, button, buttonText, box, boxTitle, paragraph, paragraphCenter, textInput} from '../Services/Styles';
 import {navigateRootNavigator} from '../Services/Navigation';
 
 export default class Home extends Component {
@@ -43,8 +45,29 @@ export default class Home extends Component {
         LoadingSpinner.hide();
     }
 
-    goToAppointments() {
-        navigateRootNavigator('Appointments');
+    checkIn = async () => {
+        LoadingSpinner.show();
+
+        const clientId = this.state.self.client.clientID;
+
+        let updatedClient;
+        try {
+            updatedClient = await ApiService.post(`/clients/${clientId}/check-in?latitude=${Math.random() * 50}&longitude=${Math.random() * 50}`);
+            const updatedSelf = Object.assign({}, this.state.self, {client: updatedClient});
+            this.setState({self: updatedSelf});
+        } catch (error) {
+            Alert.alert('Problem Checking In', 'An unexpected error occurred - please try again.', [{text: 'OK'}]);
+            console.error('Error checking in', error);
+            LoadingSpinner.hide();
+            return;
+        }
+
+        Alert.alert(
+            'Checked In!',
+            'Your coach now knows you are at ' + updatedClient.lastCheckedInDescription + '. Thanks for keeping us updated.',
+            [{text: 'OK'}]
+        );
+        LoadingSpinner.hide();
     }
 
     render() {
@@ -54,10 +77,85 @@ export default class Home extends Component {
         }
 
         return (
-            <View style={Styles.container}>
-                <ScrollView style={{flex: 1}} contentContainerStyle={Styles.boxes}>
-                    <Text>{'@todo - home'}</Text>
-                </ScrollView>
+            <ScrollView style={Styles.container}>
+                {this.renderOverview()}
+                {this.renderCheckIn()}
+            </ScrollView>
+        );
+    }
+
+    renderOverview() {
+        const coach = this.state.self.client.coach;
+
+        return (
+            <View style={box}>
+                <Text style={boxTitle}>Your Details</Text>
+
+                <Text style={paragraph}>
+                    <Text style={{fontWeight: 'bold'}}>{'Logged in as: '}</Text>
+                    {this.state.self.client.name}
+                </Text>
+
+                <Text style={paragraph}>
+                    <Text style={{fontWeight: 'bold'}}>{'Your Depaul coach: '}</Text>
+                    {coach.name}
+                </Text>
+
+                <Text style={paragraph}>
+                    <Text style={{fontWeight: 'bold'}}>{'Where are you staying?'}</Text>
+                </Text>
+
+                <TextInput
+                    value={this.state.self.client.address}
+                    style={textInput}
+                    underlineColorAndroid='transparent'
+                />
+
+                <Text style={paragraph}>
+                    <Text style={{fontWeight: 'bold'}}>{'What is your phone number?'}</Text>
+                </Text>
+
+                <TextInput
+                    value={this.state.self.client.phone}
+                    style={textInput}
+                    underlineColorAndroid='transparent'
+                />
+
+                <TouchableOpacity style={button}>
+                    <Text style={buttonText}>Save Changes</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    renderCheckIn() {
+        return (
+            <View style={box}>
+                <Text style={boxTitle}>Check In</Text>
+
+                {this.state.self.client.lastCheckedInAt &&
+                    <Text style={paragraphCenter}>
+                        {'You last checked in '}
+                        <Moment
+                            date={new Date(this.state.self.client.lastCheckedInAt)}
+                            fromNow={true}
+                            maxNow={true}
+                        />
+                        {', at '}
+                        {this.state.self.client.lastCheckedInDescription}
+                        {'.'}
+                    </Text>
+                }
+
+                {!this.state.self.client.lastCheckedInAt &&
+                    <Text style={paragraphCenter}>
+                        {'You haven\'t checked in via ProgressBuddy.'}
+                    </Text>
+                }
+
+                <TouchableOpacity style={button} onPress={this.checkIn}>
+                    <Text style={buttonText}>Check In Now</Text>
+                </TouchableOpacity>
             </View>
         );
     }
