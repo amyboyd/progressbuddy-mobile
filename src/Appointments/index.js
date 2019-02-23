@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
-import {Alert, View, Text, TouchableOpacity, ScrollView, Image, TextInput} from 'react-native';
-import IconsMaterial from 'react-native-vector-icons/MaterialIcons';
+import {Alert, View, Text, TouchableOpacity, ScrollView, Image} from 'react-native';
 import IconsMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconsOcticon from 'react-native-vector-icons/Octicons';
-import IconsFontAwesome from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
-import Moment from '../UI/Moment';
 import LoadingSpinner from '../Services/LoadingSpinner';
 import NavigationHeader from '../UI/NavigationHeader';
 import {getSelf} from '../Services/Auth';
 import ApiService from '../Services/ApiService';
-import {AppointmentsStyles as Styles, button, buttonText, box, boxTitle, paragraph, paragraphCenter, textInput, screenContainer} from '../Services/Styles';
+import {AppointmentsStyles as Styles, screenContainer} from '../Services/Styles';
 import {navigateRootNavigator} from '../Services/Navigation';
 
 export default class Appointments extends Component {
@@ -37,8 +33,8 @@ export default class Appointments extends Component {
         try {
             const self = await getSelf();
             const clientId = self.client.clientID;
-            const appointments = await ApiService.get(`/appointments/getAppointments/${clientId}`);
-            console.log('appointments', appointments);
+            const appointments = (await ApiService.get(`/appointments/getAppointmentsForClient/${clientId}`))
+                .filter(appointment => appointment.status !== 'appointmentStatus');
             this.setState({appointments});
         } catch (error) {
             Alert.alert('Problem Loading Appointments', 'An unexpected error occurred - please try again.', [{text: 'OK'}]);
@@ -48,8 +44,8 @@ export default class Appointments extends Component {
         LoadingSpinner.hide();
     }
 
-    goToAppointment = (appointment) => {
-        navigateRootNavigator('Appointment', {id: appointment});
+    goToAppointment = (appointment, date, time) => {
+        navigateRootNavigator('Appointment', {appointmentId: appointment.appointmentID, date, time});
     }
 
     render() {
@@ -68,7 +64,7 @@ export default class Appointments extends Component {
 
     renderSortOptions() {
         return (
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
                 <Text style={{textAlign: 'right', fontSize: 16}}>Sort by: upcoming</Text>
 
                 <IconsMaterialCommunity name='dots-vertical' size={18} style={{marginTop: 2, marginBottom: 15}} />
@@ -80,10 +76,10 @@ export default class Appointments extends Component {
         return (
             <View>
                 {this.renderDateHeader('Tomorrow')}
-                {this.renderAppointment(this.state.appointments[0], '12pm-1pm')}
+                {this.renderAppointment(this.state.appointments[0], 'Tomorrow', '12pm-1pm')}
 
                 {this.renderDateHeader('30 February')}
-                {this.renderAppointment(this.state.appointments[1], '4pm-4:30pm')}
+                {this.renderAppointment(this.state.appointments[1], '30 February', '4pm-4:30pm')}
             </View>
         );
     }
@@ -98,13 +94,13 @@ export default class Appointments extends Component {
         );
     }
 
-    renderAppointment(appointment, time) {
+    renderAppointment = (appointment, date, time) => {
         if (!appointment) {
             return <Text>-</Text>;
         }
 
         return (
-            <TouchableOpacity style={Styles.appointment} onPress={() => goToAppointment(appointment)}>
+            <TouchableOpacity style={Styles.appointment} onPress={() => this.goToAppointment(appointment, date, time)}>
                 <View style={Styles.appointmentTopRow}>
                     <Text style={Styles.appointmentTitle}>
                         {appointment.title}
@@ -119,7 +115,7 @@ export default class Appointments extends Component {
 
                 <View style={Styles.appointmentBottomRow}>
                     <View style={Styles.appointmentDescription}>
-                        <Text style={[Styles.appointmentDescriptionText, {fontWeight: 'bold'}]}>{appointment.time}</Text>
+                        <Text style={[Styles.appointmentDescriptionText, {fontWeight: 'bold'}]}>{time}</Text>
                         <Text style={Styles.appointmentDescriptionText}>{appointment.notes}</Text>
                     </View>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation';
+import Appointment from '../Appointment';
 import Appointments from '../Appointments';
 import Home from '../Home';
 import Login from '../Login';
@@ -26,6 +27,9 @@ const routeConfig = {
     // },
     Home: {
         screen: Home,
+    },
+    Appointment: {
+        screen: Appointment,
     },
     Appointments: {
         screen: Appointments,
