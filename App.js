@@ -49,8 +49,6 @@ export default class App extends Component {
         });
 
         SplashScreen.hide();
-
-        setTimeout(this.checkAppVersionSupport, 5000);
     }
 
     doLoggedOutActions() {
@@ -95,6 +93,13 @@ export default class App extends Component {
         } catch (error) {
             console.error('Error getting self on startup', error);
         }
+
+        // Force the bottom nav to show.
+        setTimeout(() => {
+            this.setState({
+                x: Date.now(),
+            });
+        }, 100);
     }
 
     screensWithoutBottomNav = [
@@ -117,16 +122,14 @@ export default class App extends Component {
                     onNavigationStateChange={this.onNavigationStateChange}
                 />
 
-                {this.shouldBottomNavBeDisplayed() &&
-                    <View>
-                        <BottomNavTabs />
-                    </View>
-                }
-
                 <StatusBar
                     barStyle='light-content'
                     backgroundColor={this.state.primaryColorHex}
                 />
+
+                {this.shouldBottomNavBeDisplayed() &&
+                    <BottomNavTabs />
+                }
 
                 { LoadingSpinner.element }
             </View>

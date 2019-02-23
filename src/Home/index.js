@@ -56,7 +56,7 @@ export default class Home extends Component {
         return (
             <View style={Styles.container}>
                 <ScrollView style={{flex: 1}} contentContainerStyle={Styles.boxes}>
-                    {'@todo - home'}
+                    <Text>{'@todo - home'}</Text>
                 </ScrollView>
             </View>
         );

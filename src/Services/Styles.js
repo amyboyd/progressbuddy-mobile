@@ -6,9 +6,14 @@ export const BOTTOM_NAV_TAGS_HEIGHT = 56;
 
 export const BOTTOM_NAV_BACKGROUND_COLOR = '#dddddd';
 
-export const BottomNavTabsStyleSheetBuilder = StyleSheet.create({
+export const BottomNavTabsStyles = StyleSheet.create({
     nav: {
         height: BOTTOM_NAV_TAGS_HEIGHT,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
     },
 });
 
