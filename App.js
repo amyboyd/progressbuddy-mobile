@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {Keyboard, View, ScrollView, StatusBar} from 'react-native';
+import {Keyboard, View, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import RootStackNavigator from './src/Services/RootStackNavigator';
 import BottomNavTabs from './src/UI/BottomNavTabs';

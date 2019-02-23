@@ -3,9 +3,7 @@ import BottomNavigation, {Tab} from 'react-native-material-bottom-navigation';
 import IconsMaterial from 'react-native-vector-icons/MaterialIcons';
 import IconsMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconsFoundation from 'react-native-vector-icons/Foundation';
-import IconsOcticon from 'react-native-vector-icons/Octicons';
 import IconsEntypo from 'react-native-vector-icons/Entypo';
-import IconsFontAwesome from 'react-native-vector-icons/FontAwesome';
 import {navigateRootNavigator, getCurrentRouteName} from '../Services/Navigation';
 import {BottomNavTabsStyles as Styles, BOTTOM_NAV_BACKGROUND_COLOR} from '../Services/Styles';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation';
+import Appointments from '../Appointments';
 import Home from '../Home';
 import Login from '../Login';
-// import Appointments from '../Appointments';
 
 class Empty extends React.Component {
     static navigationOptions = () => ({
@@ -27,9 +27,9 @@ const routeConfig = {
     Home: {
         screen: Home,
     },
-    // Appointments: {
-    //     screen: Appointments,
-    // },
+    Appointments: {
+        screen: Appointments,
+    },
 };
 
 const stackNavigatorConfig = {

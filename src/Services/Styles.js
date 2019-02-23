@@ -22,13 +22,78 @@ export const BottomNavTabsStyles = StyleSheet.create({
     },
 });
 
+export const screenContainer = {
+    flex: 1,
+    marginHorizontal: 15,
+    marginBottom: BOTTOM_NAV_TAGS_HEIGHT,
+    paddingTop: 15,
+    paddingBottom: BOTTOM_NAV_TAGS_HEIGHT + 30,
+};
+
 export const HomeStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginHorizontal: 15,
-        marginBottom: BOTTOM_NAV_TAGS_HEIGHT,
-        paddingTop: 15,
-        paddingBottom: BOTTOM_NAV_TAGS_HEIGHT + 30,
+});
+
+export const AppointmentsStyles = StyleSheet.create({
+    dateHeader: {
+        backgroundColor: primaryColorHex,
+        width: '100%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: standardBorderRadius,
+        height: 37,
+        marginBottom: 15,
+    },
+    dateHeaderText: {
+        color: 'white',
+        fontSize: 18,
+    },
+
+    appointment: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#cccccc',
+        borderRadius: standardBorderRadius,
+        borderBottomWidth: 4,
+        borderBottomColor: '#A86B05',
+        marginBottom: 15,
+    },
+
+    appointmentTopRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 15,
+    },
+    appointmentTitle: {
+        fontWeight: 'bold',
+        marginTop: 6,
+        marginLeft: 8,
+    },
+    appointmentPriority: {
+        backgroundColor: '#1E479C',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderTopRightRadius: standardBorderRadius,
+        borderBottomLeftRadius: standardBorderRadius,
+    },
+    appointmentPriorityText: {
+        color: 'white',
+    },
+
+    appointmentBottomRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    appointmentDescription: {
+        alignSelf: 'flex-start',
+    },
+    appointmentDescriptionText: {
+        fontSize: 16,
+        marginBottom: 15,
+    },
+    appointmentImage: {
+        width: 100,
+        alignSelf: 'center',
     },
 });
 

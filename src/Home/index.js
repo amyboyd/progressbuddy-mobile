@@ -1,17 +1,12 @@
 import React, {Component} from 'react';
-import {Alert, View, Text, TouchableOpacity, ScrollView, Image, TextInput} from 'react-native';
-import IconsMaterial from 'react-native-vector-icons/MaterialIcons';
-import IconsMaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconsOcticon from 'react-native-vector-icons/Octicons';
-import IconsFontAwesome from 'react-native-vector-icons/FontAwesome';
-import Moment from '../UI/Moment';
+import {Alert, View, Text, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import PropTypes from 'prop-types';
+import Moment from '../UI/Moment';
 import LoadingSpinner from '../Services/LoadingSpinner';
 import NavigationHeader from '../UI/NavigationHeader';
 import {getSelf} from '../Services/Auth';
 import ApiService from '../Services/ApiService';
-import {HomeStyles as Styles, button, buttonText, box, boxTitle, paragraph, paragraphCenter, textInput} from '../Services/Styles';
-import {navigateRootNavigator} from '../Services/Navigation';
+import {button, buttonText, box, boxTitle, paragraph, paragraphCenter, textInput, screenContainer} from '../Services/Styles';
 
 export default class Home extends Component {
     static navigationOptions = ({navigation}) => ({
@@ -77,7 +72,7 @@ export default class Home extends Component {
         }
 
         return (
-            <ScrollView style={Styles.container}>
+            <ScrollView style={screenContainer}>
                 {this.renderOverview()}
                 {this.renderCheckIn()}
             </ScrollView>

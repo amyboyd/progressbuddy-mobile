@@ -31,10 +31,9 @@ export default class Moment extends Component {
 
     render() {
         const date = (this.props.maxNow === true && this.props.date.getTime() > Date.now()) ? new Date() : this.props.date;
-        const filter = (this.props.fromNow === true && this.props.titleCase === true ? toTitleCase : undefined);
 
         return (
-            <ReactMoment element={Text} style={this.props.style} fromNow={this.props.fromNow} format={this.props.format} filter={filter}>
+            <ReactMoment element={Text} style={this.props.style} fromNow={this.props.fromNow} format={this.props.format}>
                 {date}
             </ReactMoment>
         );
