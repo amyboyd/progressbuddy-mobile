@@ -11,6 +11,3 @@ import config from './config.json';
 console.info('Config:', config);
 
 AppRegistry.registerComponent(appName, () => App);
-
-// @todo
-// initializeOtaUpdates();

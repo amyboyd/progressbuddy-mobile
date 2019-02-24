@@ -59,23 +59,6 @@ export default class App extends Component {
         let initialRoute;
         let initialRouteParams;
 
-        // @todo
-        // try {
-        //     initializeFCM();
-
-        //     const backgroundPushNotification = await getBackgroundPushNotification();
-
-        //     if (backgroundPushNotification) {
-        //         const targetRoute = getNotificationTargetRoute(backgroundPushNotification);
-        //         if (targetRoute) {
-        //             initialRoute = targetRoute[0];
-        //             initialRouteParams = targetRoute[1];
-        //         }
-        //     }
-        // } catch (error) {
-        //     Logger.error('Error deciding on first screen for logged in user', error);
-        // }
-
         if (!initialRoute) {
             initialRoute = 'Home';
         }
