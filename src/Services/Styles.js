@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 
-export const primaryColorHex = '#EA9C1D';
-export const buttonBackgroundColorHex = '#EA9C1D';
+export const primaryColorHex = '#13A82F';
+export const buttonBackgroundColorHex = '#13A82F';
 export const buttonTextColorHex = '#FFFFFF';
 export const standardBorderRadius = 4;
 
@@ -41,7 +41,7 @@ export const box = {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderBottomWidth: 4,
-    borderBottomColor: '#A86B05',
+    borderBottomColor: '#0A7F20',
     padding: 15,
     marginBottom: 15,
 };
