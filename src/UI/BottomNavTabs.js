@@ -12,9 +12,9 @@ const DEFAULT_TAB_COLOR = '#333333';
 export default class BottomNavTabs extends Component {
     bottomNavTabActions = [
         'Home',
+        'Progress',
         'Appointments',
         'CheckIn',
-        'Progress',
     ]
 
     static propTypes = {
@@ -63,6 +63,13 @@ export default class BottomNavTabs extends Component {
 
                 <Tab
                     barBackgroundColor={this.backgroundColor}
+                    label='Progress'
+                    icon={<IconsEntypo size={24} color={this.inactiveTabColor} name='progress-two' />}
+                    activeIcon={<IconsEntypo size={24} color={this.state.activeTabColor} name='progress-two' />}
+                />
+
+                <Tab
+                    barBackgroundColor={this.backgroundColor}
                     label='Appointments'
                     icon={<IconsMaterialCommunity size={24} color={this.inactiveTabColor} name='calendar-check' />}
                     activeIcon={<IconsMaterialCommunity size={24} color={this.state.activeTabColor} name='calendar-check' />}
@@ -73,13 +80,6 @@ export default class BottomNavTabs extends Component {
                     label='CheckIn'
                     icon={<Image source={require('../../assets/check-in.png')} style={{tintColor: this.inactiveTabColor, width: 20, height: 20}} />}
                     activeIcon={<Image source={require('../../assets/check-in.png')} style={{tintColor: this.state.activeTabColor, width: 20, height: 20}} />}
-                />
-
-                <Tab
-                    barBackgroundColor={this.backgroundColor}
-                    label='Progress'
-                    icon={<IconsEntypo size={24} color={this.inactiveTabColor} name='progress-two' />}
-                    activeIcon={<IconsEntypo size={24} color={this.state.activeTabColor} name='progress-two' />}
                 />
             </BottomNavigation>
         );
