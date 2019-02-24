@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 
-export const primaryColorHex = '#F5A623';
-export const buttonBackgroundColorHex = '#F5A623';
+export const primaryColorHex = '#EA9C1D';
+export const buttonBackgroundColorHex = '#EA9C1D';
 export const buttonTextColorHex = '#FFFFFF';
 export const standardBorderRadius = 4;
 
